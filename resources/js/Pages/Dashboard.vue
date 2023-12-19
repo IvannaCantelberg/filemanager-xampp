@@ -1,7 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
+
+
 </script>
 
 <template>
@@ -14,7 +15,10 @@ import { Head } from '@inertiajs/vue3';
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <PrimaryButton>Create Post</PrimaryButton>
+                <Link
+                v-if="$page.props.auth.user"
+                :href="route('post.create')"
+                >Create Post</Link>
             </div>
         </div>
 

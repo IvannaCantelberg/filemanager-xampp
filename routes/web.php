@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PostController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,6 +26,13 @@ Route::get('/', function () {
     ]);
 });
 
+// Route::get('/post', function(){ return Inertia::render('Post');})->name('post');
+
+Route::get('/create-post', function () {
+    return Inertia::render('Post');
+})->middleware(['auth', 'verified'])->name('post.create');
+
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -37,4 +45,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
 require __DIR__.'/auth.php';
+
