@@ -17,7 +17,8 @@ import { Head, Link } from '@inertiajs/vue3';
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <Link
                 v-if="$page.props.auth.user"
-                :href="route('post.create')"
+                :href="route('post.index')"
+                class="px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-lg text-white"
                 >Create Post</Link>
             </div>
         </div>

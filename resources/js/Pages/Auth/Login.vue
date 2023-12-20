@@ -31,7 +31,7 @@ const submit = () => {
 const loginAsTest = (e) => {
     form.transform((data) => ({
         ...data,
-            email: 'test@test.com',
+            email: 'joedon@test.com',
             password: '12345678'
         })
     );
@@ -103,7 +103,7 @@ const loginAsTest = (e) => {
         </form>
         <div class="flex items-center justify-center">
             <PrimaryButton class="ms-4" @click="loginAsTest(e)">
-                Log in as Test User
+                Log in as Joe Don
             </PrimaryButton>
         </div>
     </GuestLayout>
