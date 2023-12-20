@@ -28,14 +28,17 @@ Route::get('/', function () {
 
 // Route::get('/post', function(){ return Inertia::render('Post');})->name('post');
 
-Route::get('/create-post', function () {
-    return Inertia::render('Post');
-})->middleware(['auth', 'verified'])->name('post.create');
+Route::get('/create-post', [PostController::class, 'index'])->middleware(['auth', 'verified'])->name('post.index');
+Route::post('/create-post', [PostController::class, 'store'])->middleware(['auth', 'verified'])->name('post.store');
 
 
 Route::get('/dashboard', function () {
+
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard/posts', [PostController::class, 'showAll'])->middleware(['auth', 'verified'])->name('dashboard.posts');
+
 
 
 Route::middleware('auth')->group(function () {

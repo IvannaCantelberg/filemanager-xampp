@@ -1,10 +1,10 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Post;
 
 class PostController extends Controller
 {
@@ -13,15 +13,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return Inertia::render('Post');
+        return Inertia::render("Post/Index");
     }
 
     /**
@@ -29,21 +21,26 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'imageUrl' => '',
+        ]);
+        Post::create($data);
+        return redirect()->route('post.index')
+            ->with('success', 'Post created successfully.');
+    }
+
+    public function showAll(){
+        $posts = Post::all();
+
+        return response()->json($posts);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
     {
         //
     }
