@@ -7,8 +7,9 @@ import TextInput from '@/Components/TextInput.vue';
 import TextAreaInput from '@/Components/TextAreaInput.vue';
 import ImageUpload from '@/Components/ImageUpload.vue';
 import ImagePreview from '@/Components/ImagePreview.vue';
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { fromJSON } from 'postcss';
 
 
 const imageUrl = ref('');
@@ -19,27 +20,57 @@ const form = useForm({
     imageUrl: ''
 });
 
+const formImage = useForm({
+    imageUrl: ''
+})
 
 const savePost = () => {
-form.post(route('post.store'), {
+
+    // form.imageUrl = imageUrl.value;
+    form.post(route('post.store'), {
         preserveScroll: true,
+        // forceFormData: true,
         onSuccess: () => {
             form.reset();
-            imageUrl.value = '';
+
         },
     });
+
+
+}
+
+const uploadFile = () => {
+    // route('file.upload')
+    formImage.post(route('file.upload'), {
+        preserveScroll: true,
+        forceFormData: true,
+        onFinish: (e) => {
+            console.log('finish => ', e);
+        },
+        onSuccess:  (e) => {
+            console.log(e);
+            form.imageUrl = formImage.imageUrl;
+            savePost();
+
+
+            formImage.reset();
+            imageUrl.value = '';
+            console.log(e, 'success')
+        }
+    })
 }
 
 
 const onImageUpload = (url) => {
-    imageUrl.value = url;
-    form.imageUrl = url;
+    imageUrl.value = URL.createObjectURL(url);
+    formImage.imageUrl = url;
+    // form.imageUrl = url;
 }
 
 </script>
 
 <template>
-    <form @submit.prevent="savePost" class="mt-6 space-y-6">
+    <form @submit.prevent="uploadFile" class="mt-6 space-y-6">
             <div>
                 <InputLabel for="title" value="Title" />
                 <TextInput

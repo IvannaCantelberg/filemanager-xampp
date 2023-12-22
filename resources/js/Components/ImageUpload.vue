@@ -5,10 +5,18 @@ const emit = defineEmits(['upload'])
 const onFileUpload = (event) => {
     event.stopPropagation();
     event.preventDefault();
+    const file = event.target.files[0];
 
-    const outputUrl = URL.createObjectURL(event.target.files[0]);
+    // const outputUrl = URL.createObjectURL(event.target.files[0]);
+    const result = new File([file], file.name, {
+        type: file.type
+    });
 
-    emit('upload', outputUrl);
+    const fd = new FormData();
+
+    fd.append('image', result);
+
+    emit('upload', file);
 
 }
 

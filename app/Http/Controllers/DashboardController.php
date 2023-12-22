@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\PostRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Inertia\Inertia;
-use App\Models\Post;
 
-class PostController extends Controller
+class DashboardController extends Controller
 {
     private PostRepositoryInterface $postRepository;
+
     public function __construct(PostRepositoryInterface $postRepository){
         $this->postRepository = $postRepository;
     }
@@ -18,38 +20,22 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Post/Index");
+
+        $posts = $this->postRepository->getAllPosts();
+
+        return Inertia::render('Dashboard', ['posts'=> $posts]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        var_dump($request->all());
 
-        $data = $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'required',
-            'imageUrl' => ''
-        ]);
-        // $data = $request->all();
+        $postDetails = $request->only(['title','description', 'imageUrl']);
+        $this->postRepository->createPost($postDetails);
 
-        // if ($request->hasFile('imageUrl')) {
-        //     $image_path = $request->file('imageUrl')->store('image', 'public');
-        //     $data['imageUrl'] = $image_path;
-        // }
-
-
-        $this->postRepository->createPost($data);
-        return redirect()->route('post.index')
-            ->with('success', 'Post created successfully.');
-    }
-
-    public function showAll(){
-        $posts = Post::all();
-
-        return response()->json($posts);
+        return response() -> json(['message'=> ''], Response::HTTP_CREATED);
     }
 
     /**
