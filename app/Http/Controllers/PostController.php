@@ -6,6 +6,7 @@ use App\Interfaces\PostRepositoryInterface;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Post;
+use Illuminate\Http\Response;
 
 class PostController extends Controller
 {
@@ -26,24 +27,26 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        var_dump($request->all());
+
 
         $data = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
-            'imageUrl' => ''
+            'imageUrl' => 'image'
         ]);
+
         // $data = $request->all();
 
-        // if ($request->hasFile('imageUrl')) {
-        //     $image_path = $request->file('imageUrl')->store('image', 'public');
-        //     $data['imageUrl'] = $image_path;
-        // }
+        if ($request->hasFile('imageUrl')) {
+            $image_path = $request->file('imageUrl')->store('image', 'public');
+            $data['imageUrl'] = $image_path;
+        }
 
+        //  var_dump($data['imageUrl']);
+        // exit;
 
         $this->postRepository->createPost($data);
-        return redirect()->route('post.index')
-            ->with('success', 'Post created successfully.');
+        return  Response( ['imageUrl' => asset('storage/'.$image_path)]);
     }
 
     public function showAll(){
